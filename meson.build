@@ -56,7 +56,7 @@ endif
 dependencies = [ dependency( 'threads' ) ]
 export_args += [ '-DZSTD_MULTITHREAD' ]
 
-zstd_lib = library( 'zstd', name_prefix : 'lib', include_directories : includes, sources : sources, c_args : export_args, dependencies : dependencies, install : true )
+zstd_lib = library( 'zstd', name_prefix : 'lib', include_directories : includes, sources : sources, c_args : export_args, dependencies : dependencies, gnu_symbol_visibility : 'hidden', install : true )
 zstd_lic = files( 'LICENSE' )
 zstd_dep = declare_dependency( include_directories : include_directories( 'lib', 'lib/dictBuilder', 'lib/common' ), compile_args : import_args, link_with : zstd_lib )
 install_headers( headers )
