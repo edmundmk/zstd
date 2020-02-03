@@ -1,0 +1,61 @@
+project( 'zstd', 'c', 'cpp', default_options : [ 'c_std=gnu99', 'cpp_std=c++11' ], version : '1.4.4' )
+
+includes = include_directories(
+    'lib',
+    'lib/common',
+    'lib/compress',
+    'lib/decompress',
+    'lib/dictBuilder'
+)
+
+headers = [
+    'lib/zstd.h',
+    'lib/dictBuilder/zdict.h',
+    'lib/common/zstd_errors.h'
+]
+
+sources = [
+    'lib/common/entropy_common.c',
+    'lib/common/fse_decompress.c',
+    'lib/common/threading.c',
+    'lib/common/pool.c',
+    'lib/common/zstd_common.c',
+    'lib/common/error_private.c',
+    'lib/common/xxhash.c',
+    'lib/compress/hist.c',
+    'lib/compress/fse_compress.c',
+    'lib/compress/huf_compress.c',
+    'lib/compress/zstd_compress.c',
+    'lib/compress/zstd_compress_literals.c',
+    'lib/compress/zstd_compress_sequences.c',
+    'lib/compress/zstdmt_compress.c',
+    'lib/compress/zstd_fast.c',
+    'lib/compress/zstd_double_fast.c',
+    'lib/compress/zstd_lazy.c',
+    'lib/compress/zstd_opt.c',
+    'lib/compress/zstd_ldm.c',
+    'lib/decompress/huf_decompress.c',
+    'lib/decompress/zstd_decompress.c',
+    'lib/decompress/zstd_decompress_block.c',
+    'lib/decompress/zstd_ddict.c',
+    'lib/dictBuilder/cover.c',
+    'lib/dictBuilder/fastcover.c',
+    'lib/dictBuilder/divsufsort.c',
+    'lib/dictBuilder/zdict.c',
+]
+
+if host_machine.system() != 'windows'
+    export_args = []
+    import_args = []
+else
+    export_args = [ '-DZSTD_DLL_EXPORT=1' ]
+    import_args = [ '-DZSTD_DLL_IMPORT=1' ]
+endif
+
+dependencies = [ dependency( 'threads' ) ]
+export_args += [ '-DZSTD_MULTITHREAD' ]
+
+zstd_lib = library( 'zstd', include_directories : includes, sources : sources, c_args : export_args, dependencies : dependencies, install : true )
+zstd_lic = files( 'LICENSE' )
+zstd_dep = declare_dependency( include_directories : include_directories( 'lib', 'lib/dictBuilder', 'lib/common' ), compile_args : import_args, link_with : zstd_lib )
+install_headers( headers )
