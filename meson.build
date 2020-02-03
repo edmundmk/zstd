@@ -1,4 +1,4 @@
-project( 'zstd', 'c', 'cpp', default_options : [ 'c_std=gnu99', 'cpp_std=c++11' ], version : '1.4.4' )
+project( 'zstd', 'c', default_options : [ 'c_std=gnu99' ], version : '1.4.4' )
 
 includes = include_directories(
     'lib',
@@ -41,7 +41,7 @@ sources = [
     'lib/dictBuilder/cover.c',
     'lib/dictBuilder/fastcover.c',
     'lib/dictBuilder/divsufsort.c',
-    'lib/dictBuilder/zdict.c',
+    'lib/dictBuilder/zdict.c'
 ]
 
 if host_machine.system() != 'windows'
