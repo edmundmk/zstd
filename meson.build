@@ -44,19 +44,18 @@ sources = [
     'lib/dictBuilder/zdict.c'
 ]
 
-if host_machine.system() != 'windows'
-    export_args = []
-    import_args = []
-else
-    export_args = [ '-DZSTD_DLL_EXPORT=1' ]
-    import_args = [ '-DZSTD_DLL_IMPORT=1' ]
+dependencies = [ dependency( 'threads' ) ]
+
+c_args = [ '-DZSTD_MULTITHREAD' ]
+dep_args = []
+
+if host_machine.system() == 'windows'
+    c_args = [ '-DZSTD_DLL_EXPORT=1' ]
+    dep_args = [ '-DZSTD_DLL_IMPORT=1' ]
     sources += import( 'windows' ).compile_resources( 'build/VS2010/libzstd-dll/libzstd-dll.rc' )
 endif
 
-dependencies = [ dependency( 'threads' ) ]
-export_args += [ '-DZSTD_MULTITHREAD' ]
-
-zstd_lib = library( 'zstd', name_prefix : 'lib', include_directories : includes, sources : sources, c_args : export_args, dependencies : dependencies, gnu_symbol_visibility : 'hidden', install : true )
+zstd_lib = library( 'zstd', name_prefix : 'lib', include_directories : includes, sources : sources, c_args : c_args, dependencies : dependencies, gnu_symbol_visibility : 'hidden', install : true )
 zstd_lic = files( 'LICENSE' )
-zstd_dep = declare_dependency( include_directories : include_directories( 'lib', 'lib/dictBuilder', 'lib/common' ), compile_args : import_args, link_with : zstd_lib )
+zstd_dep = declare_dependency( include_directories : include_directories( 'lib', 'lib/dictBuilder', 'lib/common' ), compile_args : dep_args, link_with : zstd_lib )
 install_headers( headers )
