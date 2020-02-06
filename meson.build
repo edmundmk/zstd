@@ -50,9 +50,9 @@ c_args = [ '-DZSTD_MULTITHREAD' ]
 dep_args = []
 
 if host_machine.system() == 'windows'
-    c_args = [ '-DZSTD_DLL_EXPORT=1' ]
-    dep_args = [ '-DZSTD_DLL_IMPORT=1' ]
-    sources += import( 'windows' ).compile_resources( 'build/VS2010/libzstd-dll/libzstd-dll.rc' )
+    c_args += '-DZSTD_DLL_EXPORT=1'
+    dep_args += '-DZSTD_DLL_IMPORT=1'
+    sources += import( 'windows' ).compile_resources( 'build/VS2010/libzstd-dll/libzstd-dll.rc', include_directories : includes )
 endif
 
 zstd_lib = library( 'zstd', name_prefix : 'lib', include_directories : includes, sources : sources, c_args : c_args, dependencies : dependencies, gnu_symbol_visibility : 'hidden', install : true )
