@@ -55,6 +55,10 @@ if host_machine.system() == 'windows'
     sources += import( 'windows' ).compile_resources( 'build/VS2010/libzstd-dll/libzstd-dll.rc', include_directories : includes )
 endif
 
+if meson.get_compiler( 'c' ).has_argument( '-Wno-gnu-zero-variadic-macro-arguments' )
+    c_args += '-Wno-gnu-zero-variadic-macro-arguments'
+endif
+
 zstd_lib = library( 'zstd', name_prefix : 'lib', include_directories : includes, sources : sources, c_args : c_args, dependencies : dependencies, gnu_symbol_visibility : 'hidden', install : true )
 zstd_lic = files( 'LICENSE' )
 zstd_dep = declare_dependency( include_directories : include_directories( 'lib', 'lib/dictBuilder', 'lib/common' ), compile_args : dep_args, link_with : zstd_lib )
